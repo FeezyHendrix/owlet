@@ -4,12 +4,9 @@ dist-firefox
 *.zip
 
 .DS_Store
-.vscode/*
 !.vscode/extensions.json
 .idea
 *.log
-.env
-.env.local
 
 playwright-report
 test-results
@@ -17,3 +14,4 @@ test-results
 coverage
 
 stats.html
+config.bat

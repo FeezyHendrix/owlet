@@ -5,11 +5,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "dev:firefox": "cross-env BROWSER_TARGET=firefox vite",
-    "build": "tsc --noEmit && vite build",
-    "build:firefox": "tsc --noEmit && cross-env BROWSER_TARGET=firefox vite build",
-    "build:all": "pnpm build && pnpm build:firefox",
+    "dev": "node init && vite",
+    "dev:firefox": "node init && cross-env BROWSER_TARGET=firefox vite",
+    "build": "node init && tsc --noEmit && vite build",
+    "build:firefox": "node init && tsc --noEmit && cross-env BROWSER_TARGET=firefox vite build",
+    "build:all": "node init && pnpm build && pnpm build:firefox",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
@@ -25,7 +25,9 @@
     "@floating-ui/dom": "^1.6.13",
     "@mozilla/readability": "^0.5.0",
     "dompurify": "^3.4.1",
+    "dotenv": "^8.2.0",
     "marked": "^18.0.2",
+    "node-fetch": "^3.3.2",
     "preact": "^10.25.4",
     "zod": "^3.24.1",
     "zustand": "^5.0.3"
@@ -51,6 +53,9 @@
   },
   "packageManager": "pnpm@10.13.1",
   "pnpm": {
-    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "esbuild"
+    ]
   }
 }
