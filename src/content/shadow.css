@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@import "../ui/markdown.css";
+
+:host {
+  all: initial;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+
+#mount {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgb(23 23 23);
+}
+
+#mount[data-theme="dark"] {
+  color: rgb(245 245 245);
+}
+
+#mount > * {
+  pointer-events: auto;
+}
+
+#mount[data-theme="dark"] .ctx-md a {
+  color: rgb(96 165 250);
+}
+#mount[data-theme="dark"] .ctx-md code {
+  background: rgba(255, 255, 255, 0.1);
+}
+#mount[data-theme="dark"] .ctx-md pre {
+  background: rgba(255, 255, 255, 0.06);
+}
+#mount[data-theme="dark"] .ctx-md blockquote {
+  border-left-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+#mount[data-theme="dark"] .ctx-md hr {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+#mount[data-theme="dark"] .ctx-md th,
+#mount[data-theme="dark"] .ctx-md td {
+  border-color: rgba(255, 255, 255, 0.18);
+}
