@@ -1,0 +1,56 @@
+{
+  "name": "contextext",
+  "version": "0.1.0",
+  "description": "Highlight any text on the web. Get instant context from your own LLM.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:firefox": "cross-env BROWSER_TARGET=firefox vite",
+    "build": "tsc --noEmit && vite build",
+    "build:firefox": "tsc --noEmit && cross-env BROWSER_TARGET=firefox vite build",
+    "build:all": "pnpm build && pnpm build:firefox",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "package": "pnpm build && cd dist && zip -r ../contextext-chrome.zip . && cd ..",
+    "package:firefox": "pnpm build:firefox && cd dist-firefox && zip -r ../contextext-firefox.zip . && cd .."
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^1.6.13",
+    "@mozilla/readability": "^0.5.0",
+    "dompurify": "^3.4.1",
+    "marked": "^18.0.2",
+    "preact": "^10.25.4",
+    "zod": "^3.24.1",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@crxjs/vite-plugin": "^2.0.0-beta.32",
+    "@playwright/test": "^1.50.1",
+    "@preact/preset-vite": "^2.10.1",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/chrome": "^0.0.297",
+    "@types/firefox-webext-browser": "^120.0.4",
+    "@types/node": "^22.10.10",
+    "cross-env": "^7.0.3",
+    "happy-dom": "^16.7.2",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11",
+    "vitest": "^3.0.4"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.13.1",
+  "pnpm": {
+    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
+  }
+}

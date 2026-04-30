@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "jsxImportSource": "preact",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": true,
+    "allowImportingTsExtensions": false,
+    "noEmit": true,
+    "types": ["chrome", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@shared/*": ["src/shared/*"],
+      "@ui/*": ["src/ui/*"]
+    }
+  },
+  "include": ["src/**/*", "manifest.config.ts", "vite.config.ts", "tests/**/*"],
+  "exclude": ["node_modules", "dist", "dist-firefox"]
+}
