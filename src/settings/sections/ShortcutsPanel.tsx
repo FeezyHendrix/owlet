@@ -16,7 +16,7 @@ export function ShortcutsPanel() {
     chrome.commands.getAll((cmds) => setBindings(cmds))
   }, [])
 
-  const trigger = bindings?.find((c) => c.name === 'trigger-contextext')
+  const trigger = bindings?.find((c) => c.name === 'trigger-default-action')
 
   return (
     <div>
@@ -29,7 +29,7 @@ export function ShortcutsPanel() {
         <div class="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
           <div class="flex items-center justify-between gap-4">
             <div>
-              <div class="text-sm font-medium">Open Contextext on selection</div>
+              <div class="text-sm font-medium">Open Owlet on selection</div>
               <div class="mt-1 text-xs text-neutral-500">
                 Opens the popover for the current selection — same as clicking the FAB.
               </div>
