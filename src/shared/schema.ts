@@ -19,7 +19,7 @@ export type ContextScope = z.infer<typeof ContextScopeSchema>
 export const ActionSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1).max(40),
-  icon: z.string().max(40).default('sparkles'),
+  icon: z.string().max(40).optional(),
   systemPrompt: z.string().max(4000),
   userPromptTemplate: z.string().min(1).max(4000),
   contextScope: ContextScopeSchema,

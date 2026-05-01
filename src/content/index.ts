@@ -126,7 +126,7 @@ async function streamInto(
   action: Action,
   provider: Provider,
 ) {
-  popover.setStatus(`${action.icon} ${action.name} · ${action.model || provider.defaultModel}`)
+  popover.setStatus(`${action.name} · ${action.model || provider.defaultModel}`)
   popover.setBody('')
   popover.setStreaming(true)
 
@@ -138,7 +138,7 @@ async function streamInto(
   popover.setOnOpenSidePanel(() => {
     if (!chrome.sidePanel) return
     openSidePanel({
-      title: `${action.icon} ${action.name}`,
+      title: action.name,
       markdown: buffer,
     })
   })
@@ -178,9 +178,7 @@ async function streamInto(
       popover.setError(`Error: ${message}`)
     },
     onTrimmedNotice: (notice) => {
-      popover.setStatus(
-        `${action.icon} ${action.name} · ${action.model || provider.defaultModel} · ${notice}`,
-      )
+      popover.setStatus(`${action.name} · ${action.model || provider.defaultModel} · ${notice}`)
     },
   })
 

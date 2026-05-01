@@ -182,7 +182,7 @@ export function showFab(
         'font-family: inherit',
         'font-size: 13px',
       ].join(';')
-      item.innerHTML = `<span aria-hidden="true">${escapeHtml(action.icon)}</span><span>${escapeHtml(action.name)}</span>`
+      item.innerHTML = `<span>${escapeHtml(action.name)}</span>`
       item.addEventListener('mouseenter', () => {
         item.style.background =
           parent.dataset.theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'

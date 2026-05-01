@@ -129,31 +129,22 @@ function ActionRow({
 }) {
   return (
     <div class="flex items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
-      <button
-        type="button"
-        onClick={onEdit}
-        class="flex min-w-0 flex-1 items-center gap-3 text-left"
-      >
-        <span class="text-xl" aria-hidden="true">
-          {action.icon || '✦'}
-        </span>
-        <div class="min-w-0">
-          <div class="flex items-center gap-2">
-            <span class="font-medium">{action.name}</span>
-            {isDefault && (
-              <span class="rounded bg-emerald-100 px-1.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
-                default
-              </span>
-            )}
-            <span class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
-              {action.contextScope}
+      <button type="button" onClick={onEdit} class="flex min-w-0 flex-1 flex-col text-left">
+        <div class="flex min-w-0 items-center gap-2">
+          <span class="font-medium">{action.name}</span>
+          {isDefault && (
+            <span class="rounded bg-emerald-100 px-1.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
+              default
             </span>
-          </div>
-          <div class="mt-1 truncate text-xs text-neutral-500">
-            {provider
-              ? `${provider.label} · ${action.model || provider.defaultModel}`
-              : 'No provider'}
-          </div>
+          )}
+          <span class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
+            {action.contextScope}
+          </span>
+        </div>
+        <div class="mt-1 truncate text-xs text-neutral-500">
+          {provider
+            ? `${provider.label} · ${action.model || provider.defaultModel}`
+            : 'No provider'}
         </div>
       </button>
       {!isDefault && (
@@ -184,7 +175,6 @@ function ActionEditor({
 }) {
   const firstProvider = providers[0]
   const [name, setName] = useState(initial?.name ?? 'New action')
-  const [icon, setIcon] = useState(initial?.icon ?? '✦')
   const [providerId, setProviderId] = useState(initial?.providerId ?? firstProvider?.id ?? '')
   const [model, setModel] = useState(initial?.model ?? '')
   const [contextScope, setContextScope] = useState<ContextScope>(
@@ -211,7 +201,6 @@ function ActionEditor({
     const next: Action = {
       id: initial?.id ?? uid('act'),
       name: name.trim() || 'Action',
-      icon: icon.trim() || '✦',
       providerId,
       contextScope,
       systemPrompt,
@@ -227,14 +216,9 @@ function ActionEditor({
 
   return (
     <div class="space-y-4 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
-      <div class="grid grid-cols-[80px_1fr] gap-3">
-        <Field label="Icon">
-          <Input value={icon} onInput={setIcon} />
-        </Field>
-        <Field label="Name">
-          <Input value={name} onInput={setName} />
-        </Field>
-      </div>
+      <Field label="Name">
+        <Input value={name} onInput={setName} />
+      </Field>
 
       <div class="grid grid-cols-2 gap-3">
         <Field label="Provider">
