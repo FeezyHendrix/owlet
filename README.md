@@ -1,4 +1,4 @@
-# Contextext
+# Owlet
 
 > Highlight any text on the web. Get instant context from your own LLM.
 

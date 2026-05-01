@@ -9,8 +9,8 @@ import { useEffect, useMemo, useState } from 'preact/hooks'
 type StepId = 'welcome' | 'provider' | 'try'
 const STEPS: StepId[] = ['welcome', 'provider', 'try']
 
-const STEP_KEY = 'contextext.onboarding.step'
-const COMPLETE_KEY = 'contextext.onboarding.complete'
+const STEP_KEY = 'owlet.onboarding.step'
+const COMPLETE_KEY = 'owlet.onboarding.complete'
 
 type TestState =
   | { status: 'idle' }
@@ -92,7 +92,7 @@ function Header({ step }: { step: StepId }) {
           <span class="text-xl" aria-hidden="true">
             ✦
           </span>
-          <span class="font-semibold tracking-tight">Contextext</span>
+          <span class="font-semibold tracking-tight">Owlet</span>
         </div>
         <ol class="flex items-center gap-2" aria-label="Onboarding progress">
           {STEPS.map((s, i) => (
@@ -117,7 +117,7 @@ function WelcomeStep({ onNext, onSkip }: { onNext: () => void; onSkip: () => voi
       <div class="mb-6 text-6xl" aria-hidden="true">
         ✦
       </div>
-      <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">Welcome to Contextext</h1>
+      <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">Welcome to Owlet</h1>
       <p class="mt-3 text-base text-neutral-600 dark:text-neutral-400">
         Highlight any text on the web. Get instant context from your own LLM.
       </p>
@@ -410,7 +410,7 @@ function TryStep({
       if (!sel) return
       const text = sel.toString().trim()
       // Only react if the selection is inside the sample paragraph
-      const sampleEl = document.getElementById('contextext-sample')
+      const sampleEl = document.getElementById('owlet-sample')
       if (!sampleEl) return
       if (sel.anchorNode && sampleEl.contains(sel.anchorNode)) {
         setSelection(text)
@@ -439,7 +439,7 @@ function TryStep({
       </p>
 
       <div class="mt-6 rounded-xl border border-neutral-200 bg-neutral-50 p-5 text-left text-base leading-relaxed dark:border-neutral-800 dark:bg-neutral-900/50">
-        <p id="contextext-sample" class="select-text text-neutral-800 dark:text-neutral-200">
+        <p id="owlet-sample" class="select-text text-neutral-800 dark:text-neutral-200">
           {SAMPLE_TEXT}
         </p>
       </div>

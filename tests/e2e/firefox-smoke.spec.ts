@@ -13,7 +13,7 @@ test.describe('Firefox build smoke', () => {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
 
     expect(manifest.manifest_version).toBe(3)
-    expect(manifest.name).toBe('Contextext')
+    expect(manifest.name).toBe('Owlet')
     expect(manifest.background?.scripts?.[0]).toBeTruthy()
     expect(manifest.browser_specific_settings?.gecko?.id).toBeTruthy()
     expect(manifest.permissions).not.toContain('sidePanel')

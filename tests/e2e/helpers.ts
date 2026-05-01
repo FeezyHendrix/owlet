@@ -49,8 +49,8 @@ export async function seedConfig(context: BrowserContext, extensionId: string): 
         },
         siteRules: [],
       }
-      await chrome.storage.sync.set({ 'contextext.config.v1': config })
-      await chrome.storage.local.set({ 'contextext.key.p_test': apiKey })
+      await chrome.storage.sync.set({ 'owlet.config.v1': config })
+      await chrome.storage.local.set({ 'owlet.key.p_test': apiKey })
     },
     { baseUrl: MOCK_BASE, apiKey: MOCK_API_KEY },
   )

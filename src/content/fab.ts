@@ -41,7 +41,7 @@ export function showFab(
 
   const button = document.createElement('button')
   button.type = 'button'
-  button.setAttribute('aria-label', 'Open Contextext')
+  button.setAttribute('aria-label', 'Open Owlet')
   button.style.cssText = [
     'all: unset',
     'cursor: pointer',
@@ -54,7 +54,7 @@ export function showFab(
     'color: inherit',
     'font-family: inherit',
   ].join(';')
-  button.innerHTML = '<span aria-hidden="true">✦</span><span>Contextext</span>'
+  button.innerHTML = '<span aria-hidden="true">✦</span><span>Owlet</span>'
   button.addEventListener('mousedown', (e) => e.preventDefault())
   button.addEventListener('click', (e) => {
     e.preventDefault()

@@ -7,14 +7,14 @@ import { type RunHandle, runAction } from './run-action'
 import { type CapturedSelection, captureSelection } from './selection'
 import { ensureShadowHost } from './shadow-host'
 
-if (!window.__CONTEXTEXT_LOADED__) {
-  window.__CONTEXTEXT_LOADED__ = true
+if (!window.__OWLET_LOADED__) {
+  window.__OWLET_LOADED__ = true
   initContentScript()
 }
 
 declare global {
   interface Window {
-    __CONTEXTEXT_LOADED__?: boolean
+    __OWLET_LOADED__?: boolean
   }
 }
 
@@ -98,7 +98,7 @@ async function runActionFlow(
 
   if (config.providers.length === 0) {
     popover.setBody(
-      'Welcome to Contextext.\n\nYou need to add an LLM provider before you can run actions.\n\nClick the extension icon to open settings.',
+      'Welcome to Owlet.\n\nYou need to add an LLM provider before you can run actions.\n\nClick the extension icon to open settings.',
     )
     return
   }

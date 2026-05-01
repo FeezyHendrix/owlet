@@ -1,6 +1,6 @@
 import type { ChatRequest } from './llm/types'
 
-export const STREAM_PORT = 'contextext.stream.v1'
+export const STREAM_PORT = 'owlet.stream.v1'
 
 export type StreamRequest = {
   type: 'start'

@@ -1,6 +1,6 @@
 import shadowCss from './shadow.css?inline'
 
-const HOST_ID = 'contextext-shadow-host'
+const HOST_ID = 'owlet-shadow-host'
 
 export type ShadowMount = {
   shadowRoot: ShadowRoot

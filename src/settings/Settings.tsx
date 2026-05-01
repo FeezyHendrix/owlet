@@ -28,7 +28,7 @@ const SECTIONS: { id: SectionId; label: string; icon: string }[] = [
   { id: 'about', label: 'About', icon: 'ℹ️' },
 ]
 
-const LAST_SECTION_KEY = 'contextext.settings.lastSection'
+const LAST_SECTION_KEY = 'owlet.settings.lastSection'
 
 export function Settings() {
   const { init, loaded } = useSettings()
@@ -61,7 +61,7 @@ export function Settings() {
             <span class="text-xl" aria-hidden="true">
               ✦
             </span>
-            <h1 class="text-base font-semibold tracking-tight">Contextext Settings</h1>
+            <h1 class="text-base font-semibold tracking-tight">Owlet Settings</h1>
           </div>
           <SaveIndicator />
         </div>

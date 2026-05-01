@@ -21,7 +21,7 @@ export function AdvancedPanel() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `contextext-config-${new Date().toISOString().slice(0, 10)}.json`
+    a.download = `owlet-config-${new Date().toISOString().slice(0, 10)}.json`
     a.click()
     URL.revokeObjectURL(url)
     setStatus({ kind: 'success', message: 'Exported config (without API keys).' })

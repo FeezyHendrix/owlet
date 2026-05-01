@@ -18,7 +18,7 @@ export type PopoverHandle = {
 export function showPopover(parent: HTMLElement, selection: CapturedSelection): PopoverHandle {
   const root = document.createElement('div')
   root.setAttribute('role', 'dialog')
-  root.setAttribute('aria-label', 'Contextext result')
+  root.setAttribute('aria-label', 'Owlet result')
   root.tabIndex = -1
   root.style.cssText = [
     'position: absolute',
@@ -57,7 +57,7 @@ export function showPopover(parent: HTMLElement, selection: CapturedSelection): 
     'flex: 0 0 auto',
   ].join(';')
   const title = document.createElement('div')
-  title.textContent = 'Contextext'
+  title.textContent = 'Owlet'
   title.style.cssText = 'font-weight:600; font-size:12px; opacity:0.7; letter-spacing:0.02em;'
 
   const headerActions = document.createElement('div')

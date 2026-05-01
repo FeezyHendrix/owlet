@@ -1,6 +1,6 @@
 import { type Config, ConfigSchema, DEFAULT_CONFIG } from './schema'
 
-const CONFIG_KEY = 'contextext.config.v1'
+const CONFIG_KEY = 'owlet.config.v1'
 
 export async function loadConfig(): Promise<Config> {
   const raw = await chrome.storage.sync.get(CONFIG_KEY)
@@ -33,7 +33,7 @@ export function onConfigChange(handler: (config: Config) => void): () => void {
   return () => chrome.storage.onChanged.removeListener(listener)
 }
 
-const KEY_PREFIX = 'contextext.key.'
+const KEY_PREFIX = 'owlet.key.'
 
 export async function readApiKey(ref: string): Promise<string | null> {
   const k = `${KEY_PREFIX}${ref}`

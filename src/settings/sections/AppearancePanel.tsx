@@ -8,10 +8,7 @@ export function AppearancePanel() {
 
   return (
     <div>
-      <SectionHeader
-        title="Appearance"
-        description="Tune how Contextext looks and when it shows up."
-      />
+      <SectionHeader title="Appearance" description="Tune how Owlet looks and when it shows up." />
 
       <div class="space-y-6">
         <Group label="Theme" hint="Match your browser, or pin a mode.">

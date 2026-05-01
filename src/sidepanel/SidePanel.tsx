@@ -38,7 +38,7 @@ export function SidePanel() {
   if (!payload) {
     return (
       <main class="p-6 text-sm text-neutral-600 dark:text-neutral-400">
-        <h1 class="text-base font-semibold text-neutral-900 dark:text-neutral-100">Contextext</h1>
+        <h1 class="text-base font-semibold text-neutral-900 dark:text-neutral-100">Owlet</h1>
         <p class="mt-2">
           Highlight text on a page and click the floating button to send it here. The latest result
           will appear in this side panel.
@@ -53,7 +53,7 @@ export function SidePanel() {
     <main class="flex h-full flex-col">
       <header class="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
         <h1 class="truncate text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-          {payload.title || 'Contextext'}
+          {payload.title || 'Owlet'}
         </h1>
         <button
           type="button"

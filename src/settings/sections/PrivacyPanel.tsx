@@ -40,7 +40,7 @@ export function PrivacyPanel() {
     <div>
       <SectionHeader
         title="Privacy & Sites"
-        description="Control where Contextext runs. Selections are sent only to the LLM you configured."
+        description="Control where Owlet runs. Selections are sent only to the LLM you configured."
       />
 
       <div class="mb-6 space-y-3 rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm dark:border-neutral-800 dark:bg-neutral-900/50">
@@ -99,7 +99,7 @@ export function PrivacyPanel() {
 
       {siteRules.length === 0 ? (
         <div class="rounded-xl border border-dashed border-neutral-300 p-8 text-center text-sm text-neutral-500 dark:border-neutral-700">
-          No site rules. Contextext is enabled everywhere by default.
+          No site rules. Owlet is enabled everywhere by default.
         </div>
       ) : (
         <ul class="space-y-2">

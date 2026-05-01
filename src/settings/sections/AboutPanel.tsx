@@ -6,7 +6,7 @@ const VERSION =
     ? chrome.runtime.getManifest().version
     : 'dev'
 
-const REPO_URL = 'https://github.com/yourusername/contextext'
+const REPO_URL = 'https://github.com/FeezyHendrix/owlet'
 
 export function AboutPanel() {
   return (
@@ -20,7 +20,7 @@ export function AboutPanel() {
               ✦
             </span>
             <div>
-              <div class="text-base font-semibold">Contextext</div>
+              <div class="text-base font-semibold">Owlet</div>
               <div class="text-xs text-neutral-500">Version {VERSION}</div>
             </div>
           </div>
@@ -36,7 +36,7 @@ export function AboutPanel() {
             rel="noreferrer"
             class="text-sm text-blue-600 hover:underline dark:text-blue-400"
           >
-            github.com/yourusername/contextext →
+            github.com/FeezyHendrix/owlet →
           </a>
         </Row>
 

@@ -1,5 +1,5 @@
 {
-  "name": "contextext",
+  "name": "owlet",
   "version": "0.1.0",
   "description": "Highlight any text on the web. Get instant context from your own LLM.",
   "private": true,
@@ -18,11 +18,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "package": "pnpm build && cd dist && zip -r ../contextext-chrome.zip . && cd ..",
-    "package:firefox": "pnpm build:firefox && cd dist-firefox && zip -r ../contextext-firefox.zip . && cd .."
+    "package": "pnpm build && cd dist && zip -r ../owlet-chrome.zip . && cd ..",
+    "package:firefox": "pnpm build:firefox && cd dist-firefox && zip -r ../owlet-firefox.zip . && cd .."
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.13",
+    "@fontsource/roboto": "^5.2.10",
     "@mozilla/readability": "^0.5.0",
     "dompurify": "^3.4.1",
     "marked": "^18.0.2",

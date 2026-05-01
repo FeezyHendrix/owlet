@@ -39,7 +39,7 @@ export function ProvidersPanel() {
 
       {providers.length === 0 && !creating && (
         <div class="rounded-xl border border-dashed border-neutral-300 p-8 text-center text-sm text-neutral-500 dark:border-neutral-700">
-          No providers yet. Add one to start using Contextext.
+          No providers yet. Add one to start using Owlet.
         </div>
       )}
 

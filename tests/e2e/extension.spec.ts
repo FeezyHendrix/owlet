@@ -13,7 +13,7 @@ test('selecting text shows the FAB', async ({ context }) => {
   await page.goto(SAMPLE_URL)
   await selectText(page, '#p1')
 
-  const fab = page.locator('button[aria-label="Open Contextext"]')
+  const fab = page.locator('button[aria-label="Open Owlet"]')
   await expect(fab).toHaveCount(1)
 })
 
@@ -23,7 +23,7 @@ test('clicking FAB opens popover and streams a response', async ({ context }) =>
   await selectText(page, '#p1')
 
   const mount = shadowMount(page)
-  await mount.locator('button[aria-label="Open Contextext"]').click()
+  await mount.locator('button[aria-label="Open Owlet"]').click()
 
   const dialog = mount.locator('[role="dialog"]')
   await expect(dialog).toBeVisible()
@@ -57,7 +57,7 @@ test('follow-up input sends a second prompt', async ({ context }) => {
   await selectText(page, '#p1')
 
   const mount = shadowMount(page)
-  await mount.locator('button[aria-label="Open Contextext"]').click()
+  await mount.locator('button[aria-label="Open Owlet"]').click()
 
   const dialog = mount.locator('[role="dialog"]')
   await expect(dialog.locator('.ctx-md')).toContainText('Mocked')
@@ -78,7 +78,7 @@ test('Escape key closes the popover', async ({ context }) => {
   await selectText(page, '#p1')
 
   const mount = shadowMount(page)
-  await mount.locator('button[aria-label="Open Contextext"]').click()
+  await mount.locator('button[aria-label="Open Owlet"]').click()
 
   const dialog = mount.locator('[role="dialog"]')
   await expect(dialog).toBeVisible()
@@ -92,6 +92,6 @@ test('selection inside a textarea also shows the FAB', async ({ context }) => {
 
   await selectTextarea(page, '#ta')
 
-  const fab = shadowMount(page).locator('button[aria-label="Open Contextext"]')
+  const fab = shadowMount(page).locator('button[aria-label="Open Owlet"]')
   await expect(fab).toBeVisible()
 })

@@ -21,13 +21,13 @@ const isFirefox = process.env.BROWSER_TARGET === 'firefox'
  */
 export default defineManifest(() => ({
   manifest_version: 3,
-  name: 'Contextext',
-  short_name: 'Contextext',
+  name: 'Owlet',
+  short_name: 'Owlet',
   version: pkg.version,
   description: pkg.description,
 
   action: {
-    default_title: 'Contextext — open settings',
+    default_title: 'Owlet — open settings',
     default_icon: {
       '16': 'icons/icon-16.png',
       '32': 'icons/icon-32.png',
@@ -85,7 +85,7 @@ export default defineManifest(() => ({
         default: 'Ctrl+Shift+E',
         mac: 'Command+Shift+E',
       },
-      description: 'Run Contextext on the current selection',
+      description: 'Run Owlet on the current selection',
     },
   },
 
@@ -99,7 +99,7 @@ export default defineManifest(() => ({
     ? {
         browser_specific_settings: {
           gecko: {
-            id: 'contextext@getcontextext.dev',
+            id: 'owlet@owletapp.dev',
             strict_min_version: '128.0',
             data_collection_permissions: {
               required: ['none'],
