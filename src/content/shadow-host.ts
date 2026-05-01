@@ -1,6 +1,20 @@
+import roboto400Url from '@fontsource/roboto/files/roboto-latin-400-normal.woff2?url'
+import roboto500Url from '@fontsource/roboto/files/roboto-latin-500-normal.woff2?url'
+import roboto700Url from '@fontsource/roboto/files/roboto-latin-700-normal.woff2?url'
 import shadowCss from './shadow.css?inline'
 
 const HOST_ID = 'owlet-shadow-host'
+
+// LANDMINE: do NOT move these @font-face rules into shadow.css. That sheet is
+// `?inline` and adopted via CSSStyleSheet.replaceSync, where url() resolves
+// against the host page's base URL — fonts would silently 404. Build them at
+// runtime with chrome.runtime.getURL(). The woff2 files must also be listed in
+// web_accessible_resources (see manifest.config.ts).
+const FONT_FACES: { weight: number; url: string }[] = [
+  { weight: 400, url: roboto400Url },
+  { weight: 500, url: roboto500Url },
+  { weight: 700, url: roboto700Url },
+]
 
 export type ShadowMount = {
   shadowRoot: ShadowRoot
@@ -61,10 +75,11 @@ export function ensureShadowHost(): ShadowMount {
 }
 
 function applyStyles(root: ShadowRoot): void {
+  const fullCss = buildFontFaceCss() + shadowCss
   if ('adoptedStyleSheets' in root && typeof CSSStyleSheet !== 'undefined') {
     try {
       const sheet = new CSSStyleSheet()
-      sheet.replaceSync(shadowCss)
+      sheet.replaceSync(fullCss)
       root.adoptedStyleSheets = [sheet]
       return
     } catch {
@@ -72,8 +87,17 @@ function applyStyles(root: ShadowRoot): void {
     }
   }
   const style = document.createElement('style')
-  style.textContent = shadowCss
+  style.textContent = fullCss
   root.appendChild(style)
+}
+
+function buildFontFaceCss(): string {
+  const getUrl = (path: string) =>
+    typeof chrome !== 'undefined' && chrome.runtime?.getURL ? chrome.runtime.getURL(path) : path
+  return FONT_FACES.map(
+    ({ weight, url }) =>
+      `@font-face{font-family:"Roboto";font-style:normal;font-weight:${weight};font-display:swap;src:url("${getUrl(url)}") format("woff2");}`,
+  ).join('\n')
 }
 
 function prefersDark(): boolean {
