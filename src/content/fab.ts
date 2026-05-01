@@ -54,7 +54,7 @@ export function showFab(
     'color: inherit',
     'font-family: inherit',
   ].join(';')
-  button.innerHTML = '<span aria-hidden="true">✦</span><span>Owlet</span>'
+  button.innerHTML = '<span>Owlet</span>'
   button.addEventListener('mousedown', (e) => e.preventDefault())
   button.addEventListener('click', (e) => {
     e.preventDefault()
