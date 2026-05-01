@@ -4,6 +4,7 @@ import { testConnection as rpcTest } from '@shared/rpc'
 import type { Provider, ProviderKind } from '@shared/schema'
 import { deleteApiKey, readApiKey, writeApiKey } from '@shared/storage'
 import { useState } from 'preact/hooks'
+import { ModelCombobox } from '../components/ModelCombobox'
 import { SectionHeader } from '../components/SectionHeader'
 import { useSettings } from '../store'
 
@@ -228,7 +229,14 @@ function ProviderEditor({
       </Field>
 
       <Field label="Default model">
-        <Input value={defaultModel} onInput={setDefaultModel} spellcheck={false} />
+        <ModelCombobox
+          value={defaultModel}
+          onInput={setDefaultModel}
+          cacheKey={initial?.id ?? `${kind}:${baseUrl}`}
+          provider={{ kind, baseUrl }}
+          getApiKey={async () => apiKey || (initial ? await readApiKey(initial.apiKeyRef) : null)}
+          placeholder="e.g. gpt-4o-mini"
+        />
       </Field>
 
       <Field

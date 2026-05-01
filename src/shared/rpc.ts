@@ -19,6 +19,13 @@ export function testConnection(
   return rpc({ type: 'test-connection', provider, apiKey })
 }
 
+export function listModels(
+  provider: Pick<Provider, 'kind' | 'baseUrl'>,
+  apiKey: string,
+): Promise<RpcResult<string[]>> {
+  return rpc({ type: 'list-models', provider, apiKey })
+}
+
 export function openSettings() {
   return rpc({ type: 'open-settings' })
 }

@@ -67,6 +67,16 @@ export function createAnthropicAdapter(config: ProviderConfig): LLMAdapter {
         return { ok: false, error: errorMessage(err) }
       }
     },
+
+    async listModels(signal) {
+      const res = await fetch(joinUrl(config.baseUrl, '/models'), {
+        signal,
+        headers: anthropicHeaders(config.apiKey),
+      })
+      if (!res.ok) throw await readError(res)
+      const json = (await res.json()) as { data?: Array<{ id: string }> }
+      return (json.data ?? []).map((m) => m.id).filter((id): id is string => typeof id === 'string')
+    },
   }
 }
 

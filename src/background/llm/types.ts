@@ -27,6 +27,7 @@ export interface LLMAdapter {
   testConnection(
     signal: AbortSignal,
   ): Promise<{ ok: true; models?: string[] } | { ok: false; error: string }>
+  listModels(signal: AbortSignal): Promise<string[]>
 }
 
 export class LLMError extends Error {

@@ -90,4 +90,33 @@ describe('OpenAI adapter', () => {
     expect(result.ok).toBe(true)
     if (result.ok) expect(result.models).toEqual(['gpt-4o-mini', 'gpt-4o'])
   })
+
+  it('listModels returns model ids from /models', async () => {
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({ data: [{ id: 'gpt-4o' }, { id: 'gpt-4o-mini' }, { id: 'o1' }] }),
+          { status: 200 },
+        ),
+    )
+    vi.stubGlobal('fetch', fetchMock)
+    const models = await adapter.listModels(new AbortController().signal)
+    expect(models).toEqual(['gpt-4o', 'gpt-4o-mini', 'o1'])
+    const call = fetchMock.mock.calls[0] as unknown as [string, RequestInit]
+    expect(call[0]).toBe('https://api.openai.com/v1/models')
+    expect(call[1].headers).toMatchObject({ authorization: 'Bearer sk-test' })
+  })
+
+  it('listModels throws a friendly error on 401', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify({ error: { message: 'Bad key' } }), { status: 401 }),
+      ),
+    )
+    await expect(adapter.listModels(new AbortController().signal)).rejects.toThrow(
+      /Invalid API key.*Bad key/,
+    )
+  })
 })

@@ -34,6 +34,11 @@ type RpcMessage =
       provider: Pick<Provider, 'kind' | 'baseUrl'>
       apiKey: string
     }
+  | {
+      type: 'list-models'
+      provider: Pick<Provider, 'kind' | 'baseUrl'>
+      apiKey: string
+    }
 
 chrome.runtime.onMessage.addListener(
   (msg: RpcMessage, _sender, sendResponse: (r: RuntimeResponse) => void) => {
@@ -78,6 +83,16 @@ async function handleRpc(msg: RpcMessage): Promise<unknown> {
       const timer = setTimeout(() => ac.abort(), 15_000)
       try {
         return await adapter.testConnection(ac.signal)
+      } finally {
+        clearTimeout(timer)
+      }
+    }
+    case 'list-models': {
+      const adapter = buildAdapter(msg.provider.kind, msg.provider.baseUrl, msg.apiKey)
+      const ac = new AbortController()
+      const timer = setTimeout(() => ac.abort(), 15_000)
+      try {
+        return await adapter.listModels(ac.signal)
       } finally {
         clearTimeout(timer)
       }

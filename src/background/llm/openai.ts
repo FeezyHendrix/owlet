@@ -59,6 +59,16 @@ export function createOpenAIAdapter(config: ProviderConfig): LLMAdapter {
         return { ok: false, error: errorMessage(err) }
       }
     },
+
+    async listModels(signal) {
+      const res = await fetch(joinUrl(config.baseUrl, '/models'), {
+        signal,
+        headers: { authorization: `Bearer ${config.apiKey}` },
+      })
+      if (!res.ok) throw await readError(res)
+      const json = (await res.json()) as { data?: Array<{ id: string }> }
+      return (json.data ?? []).map((m) => m.id).filter((id): id is string => typeof id === 'string')
+    },
   }
 }
 

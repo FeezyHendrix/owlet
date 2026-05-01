@@ -1,8 +1,10 @@
 import { uid } from '@shared/defaults'
 import type { Action, ContextScope, Provider } from '@shared/schema'
+import { readApiKey } from '@shared/storage'
 import { TEMPLATE_VARS, renderTemplate } from '@shared/templates'
 import type { ComponentChildren } from 'preact'
 import { useMemo, useState } from 'preact/hooks'
+import { ModelCombobox } from '../components/ModelCombobox'
 import { SectionHeader } from '../components/SectionHeader'
 import { useSettings } from '../store'
 
@@ -231,11 +233,11 @@ function ActionEditor({
           </Select>
         </Field>
         <Field label="Model override" hint="Leave blank to use the provider's default model.">
-          <Input
+          <ActionModelField
+            providerId={providerId}
+            providers={providers}
             value={model}
             onInput={setModel}
-            placeholder={providers.find((p) => p.id === providerId)?.defaultModel ?? ''}
-            spellcheck={false}
           />
         </Field>
       </div>
@@ -425,5 +427,39 @@ function Select({
     >
       {children}
     </select>
+  )
+}
+
+function ActionModelField({
+  providerId,
+  providers,
+  value,
+  onInput,
+}: {
+  providerId: string
+  providers: Provider[]
+  value: string
+  onInput: (v: string) => void
+}) {
+  const provider = providers.find((p) => p.id === providerId)
+  if (!provider) {
+    return (
+      <Input
+        value={value}
+        onInput={onInput}
+        placeholder="Select a provider first"
+        spellcheck={false}
+      />
+    )
+  }
+  return (
+    <ModelCombobox
+      value={value}
+      onInput={onInput}
+      cacheKey={provider.id}
+      provider={{ kind: provider.kind, baseUrl: provider.baseUrl }}
+      getApiKey={() => readApiKey(provider.apiKeyRef)}
+      placeholder={provider.defaultModel}
+    />
   )
 }
