@@ -15,6 +15,9 @@ test('selecting text shows the FAB', async ({ context }) => {
 
   const fab = page.locator('button[aria-label="Open Owlet"]')
   await expect(fab).toHaveCount(1)
+
+  const fontFamily = await fab.evaluate((el) => getComputedStyle(el).fontFamily)
+  expect(fontFamily).toMatch(/Euclid Circular B/)
 })
 
 test('clicking FAB opens popover and streams a response', async ({ context }) => {

@@ -39,8 +39,12 @@ export function ensureShadowHost(): ShadowMount {
 
   const host = document.createElement('div')
   host.id = HOST_ID
+  // LANDMINE: do NOT add `all: initial` here. Inline styles beat the :host rule
+  // by specificity, so `all: initial` would force font-family back to the UA
+  // default (serif) on the host, and every shadow descendant would inherit it.
+  // The shadow boundary already isolates the inner DOM from the host page; we
+  // only need positioning/z-index here. Font + reset live in shadow.css :host.
   host.style.cssText = [
-    'all: initial',
     'position: fixed',
     'top: 0',
     'left: 0',
