@@ -1,4 +1,6 @@
-@import "tailwindcss";
+/* No Tailwind import here on purpose: its preflight sets `:host { font-family: ... }`
+   which overrides our Roboto stack below. Shadow content is hand-styled with inline
+   styles, so Tailwind utilities are not needed in this stylesheet. */
 @import "../ui/markdown.css";
 
 :host {
