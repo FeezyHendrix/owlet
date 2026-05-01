@@ -1,6 +1,7 @@
-import roboto400Url from '@fontsource/roboto/files/roboto-latin-400-normal.woff2?url'
-import roboto500Url from '@fontsource/roboto/files/roboto-latin-500-normal.woff2?url'
-import roboto700Url from '@fontsource/roboto/files/roboto-latin-700-normal.woff2?url'
+import euclid400Url from '../assets/fonts/euclid-circular-b-400.woff2?url'
+import euclid500Url from '../assets/fonts/euclid-circular-b-500.woff2?url'
+import euclid600Url from '../assets/fonts/euclid-circular-b-600.woff2?url'
+import euclid700Url from '../assets/fonts/euclid-circular-b-700.woff2?url'
 import shadowCss from './shadow.css?inline'
 
 const HOST_ID = 'owlet-shadow-host'
@@ -11,9 +12,10 @@ const HOST_ID = 'owlet-shadow-host'
 // runtime with chrome.runtime.getURL(). The woff2 files must also be listed in
 // web_accessible_resources (see manifest.config.ts).
 const FONT_FACES: { weight: number; url: string }[] = [
-  { weight: 400, url: roboto400Url },
-  { weight: 500, url: roboto500Url },
-  { weight: 700, url: roboto700Url },
+  { weight: 400, url: euclid400Url },
+  { weight: 500, url: euclid500Url },
+  { weight: 600, url: euclid600Url },
+  { weight: 700, url: euclid700Url },
 ]
 
 export type ShadowMount = {
@@ -96,7 +98,7 @@ function buildFontFaceCss(): string {
     typeof chrome !== 'undefined' && chrome.runtime?.getURL ? chrome.runtime.getURL(path) : path
   return FONT_FACES.map(
     ({ weight, url }) =>
-      `@font-face{font-family:"Roboto";font-style:normal;font-weight:${weight};font-display:swap;src:url("${getUrl(url)}") format("woff2");}`,
+      `@font-face{font-family:"Euclid Circular B";font-style:normal;font-weight:${weight};font-display:swap;src:url("${getUrl(url)}") format("woff2");}`,
   ).join('\n')
 }
 

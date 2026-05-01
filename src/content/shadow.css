@@ -1,12 +1,12 @@
 /* No Tailwind import here on purpose: its preflight sets `:host { font-family: ... }`
-   which overrides our Roboto stack below. Shadow content is hand-styled with inline
-   styles, so Tailwind utilities are not needed in this stylesheet. */
+   which overrides our Euclid Circular B stack below. Shadow content is hand-styled
+   with inline styles, so Tailwind utilities are not needed in this stylesheet. */
 @import "../ui/markdown.css";
 
 :host {
   all: initial;
-  font-family: "Roboto", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Helvetica Neue", Arial, sans-serif;
+  font-family: "Euclid Circular B", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   color-scheme: light dark;
 }
 
