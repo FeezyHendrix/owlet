@@ -141,6 +141,20 @@ export function showPopover(parent: HTMLElement, selection: CapturedSelection): 
   root.append(header, status, scroller, followUp)
   parent.appendChild(root)
 
+  // Host pages (Twitter, YouTube, Reddit, docs editors, etc.) install document-level
+  // keyboard handlers in capture phase that preventDefault on space, slash, etc.
+  // Events from inside our shadow root still bubble to the host document, so they
+  // get hijacked before the popover input can react. Stop propagation in capture
+  // phase on the popover root so host listeners on `document` never see them.
+  // We only stopPropagation (not preventDefault), so native input behavior is intact.
+  const stopKey = (e: Event) => {
+    e.stopPropagation()
+  }
+  const KEY_EVENTS = ['keydown', 'keypress', 'keyup', 'input', 'beforeinput'] as const
+  for (const evt of KEY_EVENTS) {
+    root.addEventListener(evt, stopKey, true)
+  }
+
   const reference = createVirtualReference(selection)
   const update = () => {
     computePosition(reference, root, {
