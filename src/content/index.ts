@@ -22,20 +22,38 @@ function initContentScript() {
   let fab: FabHandle | null = null
   let popover: PopoverHandle | null = null
   let selectionDebounce: ReturnType<typeof setTimeout> | null = null
+  let fabHideTimer: ReturnType<typeof setTimeout> | null = null
 
   const onSelectionChange = () => {
     if (selectionDebounce) clearTimeout(selectionDebounce)
     selectionDebounce = setTimeout(handleSelectionChange, 150)
   }
 
+  const cancelPendingHide = () => {
+    if (fabHideTimer) {
+      clearTimeout(fabHideTimer)
+      fabHideTimer = null
+    }
+  }
+
   const handleSelectionChange = async () => {
     if (popover) return
     const selection = captureSelection()
     if (!selection) {
-      fab?.destroy()
-      fab = null
+      // Selections often collapse for a frame mid-drag or when the user
+      // adjusts the highlight. Defer destroy so the FAB can be reused
+      // (and animated to its new spot) instead of replaying the enter
+      // animation from offscreen on every transient gap.
+      if (!fab || fabHideTimer) return
+      fabHideTimer = setTimeout(() => {
+        fabHideTimer = null
+        if (captureSelection()) return
+        fab?.destroy()
+        fab = null
+      }, 250)
       return
     }
+    cancelPendingHide()
 
     const config = await loadConfig().catch(() => null)
     const actions = config?.actions ?? []
@@ -45,6 +63,7 @@ function initContentScript() {
 
     const onClick = () => {
       const fresh = captureSelection() ?? selection
+      cancelPendingHide()
       fab?.destroy()
       fab = null
       openPopoverAndRun(mount, fresh, null)
@@ -54,6 +73,7 @@ function initContentScript() {
       defaultActionId,
       onPickAction: (action: Action) => {
         const fresh = captureSelection() ?? selection
+        cancelPendingHide()
         fab?.destroy()
         fab = null
         openPopoverAndRun(mount, fresh, action)

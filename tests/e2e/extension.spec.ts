@@ -125,7 +125,9 @@ test('FAB slides between selections instead of re-mounting', async ({ context })
 
   await selectText(page, '#p2')
   await expect(fab).toBeVisible()
-  const tagAfter = await fab.evaluate((el) => (el as HTMLElement & { __owletProbe?: number }).__owletProbe)
+  const tagAfter = await fab.evaluate(
+    (el) => (el as HTMLElement & { __owletProbe?: number }).__owletProbe,
+  )
   expect(tagAfter).toBe(tag)
 })
 
