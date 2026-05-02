@@ -10,7 +10,7 @@ No accounts. No telemetry. Your API key never leaves your device.
 
 - **Highlight → Get context** — select text, click the FAB, get streamed answers inline.
 - **Bring your own key** — works with OpenAI, Anthropic, and any OpenAI-compatible endpoint:
-  Kimi, Groq, OpenRouter, Together, Ollama, LM Studio, vLLM, etc.
+  Kimi, Groq, OpenRouter, Together, NVIDIA, Ollama, LM Studio, vLLM, etc.
 - **Built-in actions** — Explain, Summarize, Translate, Define. Add your own with custom prompts.
 - **Action menu** — chevron next to the FAB picks a non-default action without opening settings.
 - **Follow-up prompts** — keep the conversation going from inside the popover.

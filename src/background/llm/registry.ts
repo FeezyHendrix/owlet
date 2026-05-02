@@ -61,6 +61,12 @@ export const COMPATIBLE_PRESETS: CompatiblePreset[] = [
     defaultModel: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
   },
   {
+    id: 'nvidia',
+    label: 'NVIDIA (build.nvidia.com)',
+    baseUrl: 'https://integrate.api.nvidia.com/v1',
+    defaultModel: 'meta/llama-3.3-70b-instruct',
+  },
+  {
     id: 'ollama',
     label: 'Ollama (local)',
     baseUrl: 'http://localhost:11434/v1',
