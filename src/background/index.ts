@@ -11,6 +11,16 @@ import {
 
 const ONBOARDING_URL = chrome.runtime.getURL('src/onboarding/index.html')
 const SETTINGS_URL = chrome.runtime.getURL('src/settings/index.html')
+const SIDE_PANEL_PATH = 'src/sidepanel/index.html'
+
+if (chrome.sidePanel) {
+  // Register the panel path for every tab so chrome.sidePanel.open() from an
+  // RPC actually has something to open. Keep the toolbar action mapped to
+  // settings (handled in onClicked), so the panel only opens via Owlet's
+  // explicit "open in side panel" button in the popover.
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch(() => {})
+  chrome.sidePanel.setOptions({ path: SIDE_PANEL_PATH, enabled: true }).catch(() => {})
+}
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   if (reason === 'install') {
