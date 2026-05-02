@@ -181,7 +181,7 @@ export function showPopover(parent: HTMLElement, selection: CapturedSelection): 
   }
   document.addEventListener('keydown', onKey, true)
 
-  let onDestroyCb: (() => void) | null = null
+  let onDestroyCbs: Array<() => void> = []
   let onFollowUpCb: ((prompt: string) => void) | null = null
   let onOpenSidePanelCb: (() => void) | null = null
   let buffer = ''
@@ -205,11 +205,9 @@ export function showPopover(parent: HTMLElement, selection: CapturedSelection): 
     document.removeEventListener('keydown', onKey, true)
     cleanupPosition()
     root.remove()
-    if (onDestroyCb) {
-      const cb = onDestroyCb
-      onDestroyCb = null
-      cb()
-    }
+    const cbs = onDestroyCbs
+    onDestroyCbs = []
+    for (const cb of cbs) cb()
   }
 
   close.addEventListener('click', destroy)
@@ -255,7 +253,7 @@ export function showPopover(parent: HTMLElement, selection: CapturedSelection): 
       }
     },
     setOnDestroy: (cb) => {
-      onDestroyCb = cb
+      onDestroyCbs.push(cb)
     },
     setOnFollowUp: (cb) => {
       onFollowUpCb = cb

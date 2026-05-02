@@ -89,6 +89,25 @@ test('Escape key closes the popover', async ({ context }) => {
   await expect(dialog).not.toBeVisible()
 })
 
+test('FAB reappears after closing the popover and re-selecting text', async ({ context }) => {
+  const page = await context.newPage()
+  await page.goto(SAMPLE_URL)
+  await selectText(page, '#p1')
+
+  const mount = shadowMount(page)
+  const fab = mount.locator('button[aria-label="Open Owlet"]')
+  await expect(fab).toBeVisible()
+  await fab.click()
+
+  const dialog = mount.locator('[role="dialog"]')
+  await expect(dialog).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(dialog).not.toBeVisible()
+
+  await selectText(page, '#p2')
+  await expect(fab).toBeVisible()
+})
+
 test('selection inside a textarea also shows the FAB', async ({ context }) => {
   const page = await context.newPage()
   await page.goto(SAMPLE_URL)

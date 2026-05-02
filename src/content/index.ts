@@ -75,6 +75,9 @@ function initContentScript() {
     popover = handle
     handle.setOnDestroy(() => {
       popover = null
+      // After closing, the page selection may still be intact but no
+      // selectionchange will fire. Re-evaluate so the FAB reappears.
+      handleSelectionChange()
     })
 
     runActionFlow(selection, handle, forcedAction).catch((err) => {
