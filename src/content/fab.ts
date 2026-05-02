@@ -4,6 +4,7 @@ import type { CapturedSelection } from './selection'
 
 export type FabHandle = {
   destroy: () => void
+  update: (selection: CapturedSelection, onClick: () => void, options?: FabOptions) => boolean
 }
 
 export type FabOptions = {
@@ -14,12 +15,15 @@ export type FabOptions = {
 
 export function showFab(
   parent: HTMLElement,
-  selection: CapturedSelection,
-  onClick: () => void,
-  options: FabOptions = {},
+  initialSelection: CapturedSelection,
+  initialOnClick: () => void,
+  initialOptions: FabOptions = {},
 ): FabHandle {
-  const { actions = [], onPickAction } = options
-  const showChevron = actions.length > 1 && !!onPickAction
+  let currentSelection = initialSelection
+  let currentOnClick = initialOnClick
+  let currentActions = initialOptions.actions ?? []
+  let currentOnPickAction = initialOptions.onPickAction
+  const showChevron = currentActions.length > 1 && !!currentOnPickAction
 
   const wrap = document.createElement('div')
   wrap.style.cssText = [
@@ -59,7 +63,7 @@ export function showFab(
   button.addEventListener('click', (e) => {
     e.preventDefault()
     e.stopPropagation()
-    onClick()
+    currentOnClick()
   })
   wrap.appendChild(button)
 
@@ -99,7 +103,19 @@ export function showFab(
 
   parent.appendChild(wrap)
 
-  const reference = createVirtualReference(selection)
+  const reference = {
+    getBoundingClientRect: () => {
+      const live = safeRangeRect(currentSelection.range)
+      return live ?? currentSelection.rect
+    },
+    getClientRects: () => {
+      try {
+        return currentSelection.range.getClientRects()
+      } catch {
+        return [currentSelection.rect] as unknown as DOMRectList
+      }
+    },
+  }
 
   const update = () => {
     computePosition(reference, wrap, {
@@ -165,7 +181,7 @@ export function showFab(
       menuEl.style.boxShadow = '0 12px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08)'
     }
 
-    for (const action of actions) {
+    for (const action of currentActions) {
       const item = document.createElement('button')
       item.type = 'button'
       item.setAttribute('role', 'menuitem')
@@ -195,7 +211,7 @@ export function showFab(
         e.preventDefault()
         e.stopPropagation()
         closeMenu()
-        onPickAction?.(action)
+        currentOnPickAction?.(action)
       })
       menuEl.appendChild(item)
     }
@@ -240,21 +256,20 @@ export function showFab(
       cleanup()
       wrap.remove()
     },
-  }
-}
-
-function createVirtualReference(selection: CapturedSelection) {
-  return {
-    getBoundingClientRect: () => {
-      const live = safeRangeRect(selection.range)
-      return live ?? selection.rect
-    },
-    getClientRects: () => {
-      try {
-        return selection.range.getClientRects()
-      } catch {
-        return [selection.rect] as unknown as DOMRectList
-      }
+    update: (nextSelection, nextOnClick, nextOptions = {}) => {
+      const nextActions = nextOptions.actions ?? []
+      const nextOnPickAction = nextOptions.onPickAction
+      // Rebuilding when chevron presence changes would require restructuring
+      // the wrap; the caller recreates the FAB instead.
+      const nextShowChevron = nextActions.length > 1 && !!nextOnPickAction
+      if (nextShowChevron !== showChevron) return false
+      currentSelection = nextSelection
+      currentOnClick = nextOnClick
+      currentActions = nextActions
+      currentOnPickAction = nextOnPickAction
+      closeMenu()
+      update()
+      return true
     },
   }
 }

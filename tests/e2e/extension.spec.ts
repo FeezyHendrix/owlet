@@ -108,6 +108,27 @@ test('FAB reappears after closing the popover and re-selecting text', async ({ c
   await expect(fab).toBeVisible()
 })
 
+test('FAB slides between selections instead of re-mounting', async ({ context }) => {
+  const page = await context.newPage()
+  await page.goto(SAMPLE_URL)
+  await selectText(page, '#p1')
+
+  const mount = shadowMount(page)
+  const fab = mount.locator('button[aria-label="Open Owlet"]')
+  await expect(fab).toBeVisible()
+
+  const tag = await fab.evaluate((el) => {
+    const e = el as HTMLElement & { __owletProbe?: number }
+    e.__owletProbe = Date.now()
+    return e.__owletProbe
+  })
+
+  await selectText(page, '#p2')
+  await expect(fab).toBeVisible()
+  const tagAfter = await fab.evaluate((el) => (el as HTMLElement & { __owletProbe?: number }).__owletProbe)
+  expect(tagAfter).toBe(tag)
+})
+
 test('selection inside a textarea also shows the FAB', async ({ context }) => {
   const page = await context.newPage()
   await page.goto(SAMPLE_URL)

@@ -42,27 +42,27 @@ function initContentScript() {
     const defaultActionId = config?.defaultActionId ?? null
 
     const mount = ensureShadowHost().mountPoint
-    fab?.destroy()
-    fab = showFab(
-      mount,
-      selection,
-      () => {
+
+    const onClick = () => {
+      const fresh = captureSelection() ?? selection
+      fab?.destroy()
+      fab = null
+      openPopoverAndRun(mount, fresh, null)
+    }
+    const fabOptions = {
+      actions,
+      defaultActionId,
+      onPickAction: (action: Action) => {
         const fresh = captureSelection() ?? selection
         fab?.destroy()
         fab = null
-        openPopoverAndRun(mount, fresh, null)
+        openPopoverAndRun(mount, fresh, action)
       },
-      {
-        actions,
-        defaultActionId,
-        onPickAction: (action) => {
-          const fresh = captureSelection() ?? selection
-          fab?.destroy()
-          fab = null
-          openPopoverAndRun(mount, fresh, action)
-        },
-      },
-    )
+    }
+
+    if (fab?.update(selection, onClick, fabOptions)) return
+    fab?.destroy()
+    fab = showFab(mount, selection, onClick, fabOptions)
   }
 
   const openPopoverAndRun = (
