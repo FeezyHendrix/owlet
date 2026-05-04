@@ -107,6 +107,42 @@ function initContentScript() {
 
   document.addEventListener('selectionchange', onSelectionChange)
 
+  const teardown = () => {
+    cancelPendingHide()
+    if (selectionDebounce) {
+      clearTimeout(selectionDebounce)
+      selectionDebounce = null
+    }
+    popover?.destroy()
+    popover = null
+    fab?.destroy()
+    fab = null
+  }
+
+  // Tear down on real navigation away from the document.
+  window.addEventListener('pagehide', teardown)
+
+  // SPA route changes don't fire pagehide. Wrap history methods + listen to
+  // popstate so we tear down whenever location actually changes.
+  let lastHref = location.href
+  const onUrlChange = () => {
+    if (location.href === lastHref) return
+    lastHref = location.href
+    teardown()
+  }
+  const wrap = (key: 'pushState' | 'replaceState') => {
+    const original = history[key]
+    history[key] = function (this: History, ...args: Parameters<typeof original>) {
+      const result = original.apply(this, args)
+      // Defer so the new URL is visible to listeners and our handler.
+      queueMicrotask(onUrlChange)
+      return result
+    } as typeof original
+  }
+  wrap('pushState')
+  wrap('replaceState')
+  window.addEventListener('popstate', onUrlChange)
+
   chrome.runtime?.onMessage.addListener((msg) => {
     if (msg?.type === 'ping') return { pong: true, location: location.href }
   })
