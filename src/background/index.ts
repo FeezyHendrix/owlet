@@ -51,7 +51,26 @@ type RpcMessage =
     }
 
 chrome.runtime.onMessage.addListener(
-  (msg: RpcMessage, _sender, sendResponse: (r: RuntimeResponse) => void) => {
+  (msg: RpcMessage, sender, sendResponse: (r: RuntimeResponse) => void) => {
+    // chrome.sidePanel.open() must be called SYNCHRONOUSLY inside the
+    // message listener to keep the user-gesture token alive. Any await
+    // before it (config load, storage write, tabs.query) drops the
+    // gesture and the call silently no-ops. Open first, persist payload
+    // after — the side panel hydrates from chrome.storage.onChanged.
+    if (msg.type === 'open-side-panel') {
+      const tabId = sender.tab?.id
+      if (chrome.sidePanel && tabId !== undefined) {
+        chrome.sidePanel.open({ tabId }).catch(() => {})
+      }
+      if (msg.payload) {
+        chrome.storage.local
+          .set({ 'sidepanel.payload': { ...msg.payload, ts: Date.now() } })
+          .catch(() => {})
+      }
+      sendResponse({ ok: true, data: null })
+      return false
+    }
+
     handleRpc(msg)
       .then((data) => sendResponse({ ok: true, data }))
       .catch((err: unknown) =>
@@ -71,22 +90,9 @@ async function handleRpc(msg: RpcMessage): Promise<unknown> {
     case 'open-onboarding':
       await chrome.tabs.create({ url: ONBOARDING_URL, active: true })
       return null
-    case 'open-side-panel': {
-      if (!chrome.sidePanel) throw new Error('Side panel not supported in this browser')
-      if (msg.payload) {
-        try {
-          await chrome.storage.local.set({
-            'sidepanel.payload': { ...msg.payload, ts: Date.now() },
-          })
-        } catch {
-          // best-effort cache; side panel will fall back to empty state
-        }
-      }
-      const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
-      const tabId = tabs[0]?.id
-      if (tabId !== undefined) await chrome.sidePanel.open({ tabId })
+    case 'open-side-panel':
+      // handled synchronously above to preserve the user gesture
       return null
-    }
     case 'test-connection': {
       const adapter = buildAdapter(msg.provider.kind, msg.provider.baseUrl, msg.apiKey)
       const ac = new AbortController()
