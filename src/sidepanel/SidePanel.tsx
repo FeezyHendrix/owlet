@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'preact/hooks'
+import lockupDark from '../assets/logo/lockup-dark.svg?url'
+import lockupLight from '../assets/logo/lockup-light.svg?url'
 import { renderMarkdown } from '../content/markdown'
 
 type Payload = {
@@ -38,8 +40,9 @@ export function SidePanel() {
   if (!payload) {
     return (
       <main class="p-6 text-sm text-neutral-600 dark:text-neutral-400">
-        <h1 class="text-base font-semibold text-neutral-900 dark:text-neutral-100">Owlet</h1>
-        <p class="mt-2">
+        <img src={lockupDark} alt="Owlet" class="h-8 w-auto dark:hidden" />
+        <img src={lockupLight} alt="Owlet" class="hidden h-8 w-auto dark:block" />
+        <p class="mt-3">
           Highlight text on a page and click the floating button to send it here. The latest result
           will appear in this side panel.
         </p>

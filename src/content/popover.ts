@@ -1,4 +1,6 @@
 import { autoUpdate, computePosition, flip, inline, offset, shift } from '@floating-ui/dom'
+import lockupDarkUrl from '../assets/logo/lockup-dark.svg?url'
+import lockupLightUrl from '../assets/logo/lockup-light.svg?url'
 import { renderMarkdown } from './markdown'
 import type { CapturedSelection } from './selection'
 
@@ -56,9 +58,10 @@ export function showPopover(parent: HTMLElement, selection: CapturedSelection): 
     'padding: 12px 14px 6px',
     'flex: 0 0 auto',
   ].join(';')
-  const title = document.createElement('div')
-  title.textContent = 'Owlet'
-  title.style.cssText = 'font-weight:600; font-size:12px; opacity:0.7; letter-spacing:0.02em;'
+  const title = document.createElement('img')
+  title.src = isDark ? lockupLightUrl : lockupDarkUrl
+  title.alt = 'Owlet'
+  title.style.cssText = 'height:18px; width:auto; opacity:0.85; display:block;'
 
   const headerActions = document.createElement('div')
   headerActions.style.cssText = 'display:flex; align-items:center; gap:4px;'

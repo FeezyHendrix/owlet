@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'preact/hooks'
+import lockupDark from '../assets/logo/lockup-dark.svg?url'
+import lockupLight from '../assets/logo/lockup-light.svg?url'
 import { SaveIndicator } from './components/SaveIndicator'
 import { AboutPanel } from './sections/AboutPanel'
 import { ActionsPanel } from './sections/ActionsPanel'
@@ -58,10 +60,11 @@ export function Settings() {
       <header class="sticky top-0 z-10 border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/80">
         <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div class="flex items-center gap-3">
-            <span class="text-xl" aria-hidden="true">
-              ✦
-            </span>
-            <h1 class="text-base font-semibold tracking-tight">Owlet Settings</h1>
+            <img src={lockupDark} alt="Owlet" class="h-7 w-auto dark:hidden" />
+            <img src={lockupLight} alt="Owlet" class="hidden h-7 w-auto dark:block" />
+            <h1 class="text-base font-semibold tracking-tight text-neutral-500 dark:text-neutral-400">
+              Settings
+            </h1>
           </div>
           <SaveIndicator />
         </div>

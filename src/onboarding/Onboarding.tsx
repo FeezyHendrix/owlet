@@ -5,6 +5,8 @@ import { type Config, ConfigSchema, type Provider, type ProviderKind } from '@sh
 import { loadConfig, readApiKey, saveConfig, writeApiKey } from '@shared/storage'
 import type { ComponentChildren } from 'preact'
 import { useEffect, useMemo, useState } from 'preact/hooks'
+import lockupDark from '../assets/logo/lockup-dark.svg?url'
+import lockupLight from '../assets/logo/lockup-light.svg?url'
 
 type StepId = 'welcome' | 'provider' | 'try'
 const STEPS: StepId[] = ['welcome', 'provider', 'try']
@@ -89,10 +91,8 @@ function Header({ step }: { step: StepId }) {
     <header class="sticky top-0 z-10 border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/80">
       <div class="mx-auto flex max-w-2xl items-center justify-between px-6 py-4">
         <div class="flex items-center gap-2">
-          <span class="text-xl" aria-hidden="true">
-            ✦
-          </span>
-          <span class="font-semibold tracking-tight">Owlet</span>
+          <img src={lockupDark} alt="Owlet" class="h-7 w-auto dark:hidden" />
+          <img src={lockupLight} alt="Owlet" class="hidden h-7 w-auto dark:block" />
         </div>
         <ol class="flex items-center gap-2" aria-label="Onboarding progress">
           {STEPS.map((s, i) => (
