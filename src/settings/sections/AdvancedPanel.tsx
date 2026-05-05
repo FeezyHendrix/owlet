@@ -1,5 +1,6 @@
+import { clearConversations, listConversations, onConversationsChange } from '@shared/conversations'
 import { type Config, ConfigSchema, DEFAULT_CONFIG } from '@shared/schema'
-import { useRef, useState } from 'preact/hooks'
+import { useEffect, useRef, useState } from 'preact/hooks'
 import { SectionHeader } from '../components/SectionHeader'
 import { useSettings } from '../store'
 
@@ -15,6 +16,13 @@ export function AdvancedPanel() {
   const [status, setStatus] = useState<Status>({ kind: 'idle' })
   const [confirmingReset, setConfirmingReset] = useState(false)
   const [confirmingWipe, setConfirmingWipe] = useState(false)
+  const [confirmingClearChats, setConfirmingClearChats] = useState(false)
+  const [conversationCount, setConversationCount] = useState(0)
+
+  useEffect(() => {
+    listConversations().then((list) => setConversationCount(list.length))
+    return onConversationsChange((list) => setConversationCount(list.length))
+  }, [])
 
   const exportJson = () => {
     const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' })
@@ -77,6 +85,19 @@ export function AdvancedPanel() {
         kind: 'success',
         message: 'All data cleared. Reopen settings to start fresh.',
       })
+    } catch (err) {
+      setStatus({
+        kind: 'error',
+        message: err instanceof Error ? err.message : String(err),
+      })
+    }
+  }
+
+  const clearChats = async () => {
+    try {
+      await clearConversations()
+      setConfirmingClearChats(false)
+      setStatus({ kind: 'success', message: 'Cleared all side-panel conversations.' })
     } catch (err) {
       setStatus({
         kind: 'error',
@@ -161,6 +182,46 @@ export function AdvancedPanel() {
               class="rounded-lg border border-neutral-300 px-3 py-2 text-sm font-medium text-neutral-700 hover:border-neutral-500 dark:border-neutral-700 dark:text-neutral-300"
             >
               Reset configuration
+            </button>
+          )}
+        </Card>
+
+        <Card
+          title="Clear conversations"
+          description={
+            conversationCount === 0
+              ? 'No saved conversations.'
+              : `Delete the ${conversationCount} conversation${conversationCount === 1 ? '' : 's'} stored in the side panel. Settings and API keys are preserved.`
+          }
+        >
+          {confirmingClearChats ? (
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-neutral-700 dark:text-neutral-300">
+                Delete all saved conversations? This cannot be undone.
+              </span>
+              <button
+                type="button"
+                onClick={clearChats}
+                class="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700"
+              >
+                Yes, clear
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmingClearChats(false)}
+                class="rounded-lg px-3 py-1.5 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              disabled={conversationCount === 0}
+              onClick={() => setConfirmingClearChats(true)}
+              class="rounded-lg border border-neutral-300 px-3 py-2 text-sm font-medium text-neutral-700 hover:border-neutral-500 disabled:cursor-not-allowed disabled:opacity-40 dark:border-neutral-700 dark:text-neutral-300"
+            >
+              Clear conversations
             </button>
           )}
         </Card>

@@ -54,6 +54,10 @@ export async function deleteConversation(id: string): Promise<void> {
   await chrome.storage.local.set({ [KEY]: all.filter((c) => c.id !== id) })
 }
 
+export async function clearConversations(): Promise<void> {
+  await chrome.storage.local.remove(KEY)
+}
+
 export async function createConversation(seed: ConversationSeed): Promise<Conversation> {
   const now = Date.now()
   const conversation: Conversation = {
