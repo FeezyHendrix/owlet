@@ -64,7 +64,7 @@ export default defineManifest(() => ({
 
   web_accessible_resources: [
     {
-      resources: ['src/onboarding/index.html', 'icons/*', 'assets/*.woff2'],
+      resources: ['src/onboarding/index.html', 'icons/*', 'assets/*.woff2', 'assets/*.svg'],
       matches: ['<all_urls>'],
     },
   ],
