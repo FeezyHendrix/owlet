@@ -86,12 +86,13 @@ export function showFab(
       'display: inline-flex',
       'align-items: center',
       'justify-content: center',
-      'padding: 0 8px',
-      'font-size: 10px',
+      'padding: 0 10px',
       'color: inherit',
       'font-family: inherit',
+      'opacity: 0.85',
     ].join(';')
-    chevron.innerHTML = '<span aria-hidden="true">▾</span>'
+    chevron.innerHTML =
+      '<svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 11 12 6"/></svg>'
     chevron.addEventListener('mousedown', (e) => e.preventDefault())
     chevron.addEventListener('click', (e) => {
       e.preventDefault()
