@@ -59,7 +59,12 @@ export function showPopover(parent: HTMLElement, selection: CapturedSelection): 
     'flex: 0 0 auto',
   ].join(';')
   const title = document.createElement('img')
-  title.src = isDark ? lockupLightUrl : lockupDarkUrl
+  // LANDMINE: ?url gives '/assets/...' which the page resolves against its own
+  // origin inside our Shadow DOM. Re-resolve via chrome.runtime.getURL so the
+  // browser fetches from chrome-extension://<id>/. Both assets are listed in
+  // web_accessible_resources via the assets/*.svg pattern in manifest.config.ts.
+  const lockupPath = (isDark ? lockupLightUrl : lockupDarkUrl).replace(/^\//, '')
+  title.src = chrome.runtime.getURL(lockupPath)
   title.alt = 'Owlet'
   title.style.cssText = 'height:18px; width:auto; opacity:0.85; display:block;'
 
