@@ -1,6 +1,8 @@
+import { BUILTIN_ACTIONS_TEMPLATE, uid } from './defaults'
 import { type Config, ConfigSchema, DEFAULT_CONFIG } from './schema'
 
 const CONFIG_KEY = 'owlet.config.v1'
+const ASK_INJECTED_KEY = 'owlet.migrations.askInjected.v1'
 
 export async function loadConfig(): Promise<Config> {
   const raw = await chrome.storage.sync.get(CONFIG_KEY)
@@ -13,7 +15,31 @@ export async function loadConfig(): Promise<Config> {
     })
     return DEFAULT_CONFIG
   }
-  return parsed.data
+  return await migrateInjectAskAction(parsed.data)
+}
+
+// Idempotent one-shot migration: existing users predate the built-in Ask action.
+// Inject it at the top of their actions list using their first provider, but only
+// once — the migration flag in local storage prevents re-injection if the user
+// later deletes Ask. Skipped entirely if the user already has an ask-kind action
+// or no providers exist (nothing to bind to).
+async function migrateInjectAskAction(config: Config): Promise<Config> {
+  if (config.actions.some((a) => a.kind === 'ask')) return config
+  const firstProvider = config.providers[0]
+  if (!firstProvider) return config
+  const flag = await chrome.storage.local.get(ASK_INJECTED_KEY)
+  if (flag[ASK_INJECTED_KEY]) return config
+  const askTemplate = BUILTIN_ACTIONS_TEMPLATE.find((t) => t.kind === 'ask')
+  if (!askTemplate) return config
+  const askAction = {
+    ...askTemplate,
+    id: uid('act'),
+    providerId: firstProvider.id,
+  }
+  const next: Config = { ...config, actions: [askAction, ...config.actions] }
+  await chrome.storage.sync.set({ [CONFIG_KEY]: next })
+  await chrome.storage.local.set({ [ASK_INJECTED_KEY]: true })
+  return next
 }
 
 export async function saveConfig(config: Config): Promise<void> {
