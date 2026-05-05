@@ -1,4 +1,6 @@
+import { createConversation } from '@shared/conversations'
 import type { RuntimeResponse } from '@shared/messages'
+import type { SidePanelSeed } from '@shared/rpc'
 import type { Provider } from '@shared/schema'
 import { loadConfig } from '@shared/storage'
 import { buildAdapter, getAdapter } from './llm/registry'
@@ -38,7 +40,7 @@ type RpcMessage =
   | { type: 'ping' }
   | { type: 'open-settings' }
   | { type: 'open-onboarding' }
-  | { type: 'open-side-panel'; payload?: { title?: string; markdown?: string } }
+  | { type: 'open-side-panel'; seed?: SidePanelSeed }
   | {
       type: 'test-connection'
       provider: Pick<Provider, 'kind' | 'baseUrl'>
@@ -55,16 +57,18 @@ chrome.runtime.onMessage.addListener(
     // chrome.sidePanel.open() must be called SYNCHRONOUSLY inside the
     // message listener to keep the user-gesture token alive. Any await
     // before it (config load, storage write, tabs.query) drops the
-    // gesture and the call silently no-ops. Open first, persist payload
+    // gesture and the call silently no-ops. Open first, persist seed
     // after — the side panel hydrates from chrome.storage.onChanged.
     if (msg.type === 'open-side-panel') {
       const tabId = sender.tab?.id
       if (chrome.sidePanel && tabId !== undefined) {
         chrome.sidePanel.open({ tabId }).catch(() => {})
       }
-      if (msg.payload) {
-        chrome.storage.local
-          .set({ 'sidepanel.payload': { ...msg.payload, ts: Date.now() } })
+      if (msg.seed) {
+        createConversation(msg.seed)
+          .then((conv) =>
+            chrome.storage.local.set({ 'owlet.sidepanel.openConversationId': conv.id }),
+          )
           .catch(() => {})
       }
       sendResponse({ ok: true, data: null })

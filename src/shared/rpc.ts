@@ -1,3 +1,4 @@
+import type { ChatMessage } from '@/background/llm/types'
 import type { Provider } from './schema'
 
 export type RpcResult<T> = { ok: true; data: T } | { ok: false; error: string }
@@ -34,6 +35,20 @@ export function openOnboarding() {
   return rpc({ type: 'open-onboarding' })
 }
 
-export function openSidePanel(payload?: { title?: string; markdown?: string }) {
-  return rpc({ type: 'open-side-panel', payload })
+export type SidePanelSeed = {
+  title: string
+  providerId: string
+  actionId: string
+  model: string
+  systemPrompt: string
+  source: {
+    pageUrl: string
+    pageTitle: string
+    selectionText: string
+  }
+  messages: ChatMessage[]
+}
+
+export function openSidePanel(seed?: SidePanelSeed) {
+  return rpc({ type: 'open-side-panel', seed })
 }

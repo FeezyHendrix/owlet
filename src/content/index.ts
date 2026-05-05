@@ -193,15 +193,36 @@ async function streamInto(
   let firstChunk = true
   let runHandle: RunHandle | null = null
   let finished = false
+  let resolvedSystemPrompt = action.systemPrompt
+  let resolvedUserPrompt = ''
 
   const manifest = chrome.runtime.getManifest() as chrome.runtime.Manifest & {
     side_panel?: unknown
   }
   if (manifest.side_panel) {
     popover.setOnOpenSidePanel(() => {
+      const messages = []
+      if (resolvedSystemPrompt.trim()) {
+        messages.push({ role: 'system' as const, content: resolvedSystemPrompt })
+      }
+      if (resolvedUserPrompt) {
+        messages.push({ role: 'user' as const, content: resolvedUserPrompt })
+      }
+      if (buffer) {
+        messages.push({ role: 'assistant' as const, content: buffer })
+      }
       openSidePanel({
         title: action.name,
-        markdown: buffer,
+        providerId: provider.id,
+        actionId: action.id,
+        model: action.model || provider.defaultModel,
+        systemPrompt: resolvedSystemPrompt,
+        source: {
+          pageUrl: selection.pageUrl,
+          pageTitle: selection.pageTitle,
+          selectionText: selection.text,
+        },
+        messages,
       })
     })
   }
@@ -242,6 +263,10 @@ async function streamInto(
     },
     onTrimmedNotice: (notice) => {
       popover.setStatus(`${action.name} · ${action.model || provider.defaultModel} · ${notice}`)
+    },
+    onPrompts: ({ systemPrompt, userPrompt }) => {
+      resolvedSystemPrompt = systemPrompt
+      resolvedUserPrompt = userPrompt
     },
   })
 

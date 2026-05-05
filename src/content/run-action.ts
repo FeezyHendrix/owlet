@@ -13,6 +13,7 @@ export type RunCallbacks = {
   onDone: () => void
   onError: (message: string) => void
   onTrimmedNotice?: (notice: string) => void
+  onPrompts?: (resolved: { systemPrompt: string; userPrompt: string }) => void
 }
 
 export type RunHandle = {
@@ -37,6 +38,10 @@ export async function runAction(
       callbacks.onTrimmedNotice(
         `Context trimmed to fit budget (${trimResult.originalChars.toLocaleString()} → ${trimResult.finalChars.toLocaleString()} chars).`,
       )
+    }
+
+    if (callbacks.onPrompts) {
+      callbacks.onPrompts({ systemPrompt: action.systemPrompt, userPrompt: trimResult.text })
     }
 
     if (aborted) return { abort: noop }
