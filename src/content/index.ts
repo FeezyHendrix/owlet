@@ -194,13 +194,17 @@ async function streamInto(
   let runHandle: RunHandle | null = null
   let finished = false
 
-  popover.setOnOpenSidePanel(() => {
-    if (!chrome.sidePanel) return
-    openSidePanel({
-      title: action.name,
-      markdown: buffer,
+  const manifest = chrome.runtime.getManifest() as chrome.runtime.Manifest & {
+    side_panel?: unknown
+  }
+  if (manifest.side_panel) {
+    popover.setOnOpenSidePanel(() => {
+      openSidePanel({
+        title: action.name,
+        markdown: buffer,
+      })
     })
-  })
+  }
 
   popover.setOnFollowUp((prompt) => {
     if (!finished) return
