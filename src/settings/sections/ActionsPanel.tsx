@@ -1,5 +1,5 @@
 import { uid } from '@shared/defaults'
-import type { Action, ContextScope, Provider } from '@shared/schema'
+import type { Action, ActionKind, ContextScope, Provider } from '@shared/schema'
 import { readApiKey } from '@shared/storage'
 import { TEMPLATE_VARS, renderTemplate } from '@shared/templates'
 import type { ComponentChildren } from 'preact'
@@ -178,6 +178,7 @@ function ActionEditor({
 }) {
   const firstProvider = providers[0]
   const [name, setName] = useState(initial?.name ?? 'New action')
+  const [kind, setKind] = useState<ActionKind>(initial?.kind ?? 'preset')
   const [providerId, setProviderId] = useState(initial?.providerId ?? firstProvider?.id ?? '')
   const [model, setModel] = useState(initial?.model ?? '')
   const [contextScope, setContextScope] = useState<ContextScope>(
@@ -204,7 +205,7 @@ function ActionEditor({
     const next: Action = {
       id: initial?.id ?? uid('act'),
       name: name.trim() || 'Action',
-      kind: initial?.kind ?? 'preset',
+      kind,
       providerId,
       contextScope,
       systemPrompt,
@@ -222,6 +223,20 @@ function ActionEditor({
     <div class="space-y-4 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900">
       <Field label="Name">
         <Input value={name} onInput={setName} />
+      </Field>
+
+      <Field
+        label="Type"
+        hint={
+          kind === 'ask'
+            ? 'Ask actions prompt the user for a question, available as {{question}} in the template.'
+            : 'Preset actions run immediately on the selection.'
+        }
+      >
+        <div class="inline-flex rounded-lg border border-neutral-300 bg-neutral-50 p-0.5 dark:border-neutral-700 dark:bg-neutral-950">
+          <KindOption current={kind} value="preset" label="Preset" onSelect={setKind} />
+          <KindOption current={kind} value="ask" label="Ask" onSelect={setKind} />
+        </div>
       </Field>
 
       <div class="grid grid-cols-2 gap-3">
@@ -341,6 +356,33 @@ function ActionEditor({
         </div>
       </div>
     </div>
+  )
+}
+
+function KindOption({
+  current,
+  value,
+  label,
+  onSelect,
+}: {
+  current: ActionKind
+  value: ActionKind
+  label: string
+  onSelect: (k: ActionKind) => void
+}) {
+  const active = current === value
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(value)}
+      class={`rounded-md px-3 py-1 text-xs font-medium transition ${
+        active
+          ? 'bg-white text-neutral-900 shadow-sm dark:bg-neutral-800 dark:text-white'
+          : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
+      }`}
+    >
+      {label}
+    </button>
   )
 }
 
