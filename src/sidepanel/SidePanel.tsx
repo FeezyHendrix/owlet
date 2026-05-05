@@ -144,7 +144,7 @@ function ListView({
             : 'Add an LLM provider in Settings to start chatting.'}
         </div>
       ) : (
-        <ul class="flex-1 divide-y divide-neutral-100 overflow-auto dark:divide-neutral-900">
+        <ul class="min-h-0 flex-1 divide-y divide-neutral-100 overflow-auto dark:divide-neutral-900">
           {conversations.map((c) => (
             <li key={c.id}>
               <ConversationRow conversation={c} onOpen={onOpen} onDelete={onDelete} />
@@ -347,7 +347,7 @@ function ChatView({
         </button>
       </header>
 
-      <div ref={scrollRef} class="flex-1 overflow-auto px-4 py-3">
+      <div ref={scrollRef} class="min-h-0 flex-1 overflow-auto px-4 py-3">
         {conversation.source ? <SourceCard source={conversation.source} /> : null}
         {conversation.messages
           .filter((m) => m.role !== 'system')
