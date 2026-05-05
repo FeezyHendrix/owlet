@@ -176,7 +176,31 @@ async function runActionFlow(
     return
   }
 
+  if (action.kind === 'ask') {
+    await promptThenStream(popover, selection, action, provider)
+    return
+  }
+
   await streamInto(popover, selection, action, provider)
+}
+
+async function promptThenStream(
+  popover: PopoverHandle,
+  selection: CapturedSelection,
+  action: Action,
+  provider: Provider,
+) {
+  popover.setStatus(`${action.name} · ${action.model || provider.defaultModel}`)
+  popover.setBody('_Ask a question about the highlighted text._')
+  popover.setFollowUpPlaceholder('Ask a question…')
+  popover.setOnFollowUp((question) => {
+    popover.setOnFollowUp(null)
+    popover.setFollowUpPlaceholder('Ask a follow-up…')
+    streamInto(popover, selection, action, provider, { question }).catch((err) => {
+      popover.setError(err instanceof Error ? err.message : String(err))
+    })
+  })
+  popover.showFollowUpInput()
 }
 
 async function streamInto(
@@ -184,6 +208,7 @@ async function streamInto(
   selection: CapturedSelection,
   action: Action,
   provider: Provider,
+  options?: { question?: string },
 ) {
   popover.setStatus(`${action.name} · ${action.model || provider.defaultModel}`)
   popover.setBody('')
@@ -242,33 +267,39 @@ async function streamInto(
     })
   })
 
-  runHandle = await runAction(selection, action, provider, {
-    onText: (delta) => {
-      if (firstChunk) {
-        firstChunk = false
-        popover.setBody('')
-      }
-      buffer += delta
-      popover.appendBody(delta)
+  runHandle = await runAction(
+    selection,
+    action,
+    provider,
+    {
+      onText: (delta) => {
+        if (firstChunk) {
+          firstChunk = false
+          popover.setBody('')
+        }
+        buffer += delta
+        popover.appendBody(delta)
+      },
+      onDone: () => {
+        finished = true
+        popover.setStreaming(false)
+        if (firstChunk) popover.setBody('(empty response)')
+      },
+      onError: (message) => {
+        finished = true
+        popover.setStreaming(false)
+        popover.setError(`Error: ${message}`)
+      },
+      onTrimmedNotice: (notice) => {
+        popover.setStatus(`${action.name} · ${action.model || provider.defaultModel} · ${notice}`)
+      },
+      onPrompts: ({ systemPrompt, userPrompt }) => {
+        resolvedSystemPrompt = systemPrompt
+        resolvedUserPrompt = userPrompt
+      },
     },
-    onDone: () => {
-      finished = true
-      popover.setStreaming(false)
-      if (firstChunk) popover.setBody('(empty response)')
-    },
-    onError: (message) => {
-      finished = true
-      popover.setStreaming(false)
-      popover.setError(`Error: ${message}`)
-    },
-    onTrimmedNotice: (notice) => {
-      popover.setStatus(`${action.name} · ${action.model || provider.defaultModel} · ${notice}`)
-    },
-    onPrompts: ({ systemPrompt, userPrompt }) => {
-      resolvedSystemPrompt = systemPrompt
-      resolvedUserPrompt = userPrompt
-    },
-  })
+    options,
+  )
 
   popover.setOnDestroy(() => {
     runHandle?.abort()

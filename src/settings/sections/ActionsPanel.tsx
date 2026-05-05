@@ -24,6 +24,7 @@ const SAMPLE_VARS: Record<(typeof TEMPLATE_VARS)[number], string> = {
   pageText: '(full page text would appear here)',
   title: 'Wikipedia — Quantum entanglement',
   url: 'https://en.wikipedia.org/wiki/Quantum_entanglement',
+  question: 'What is quantum entanglement in plain English?',
 }
 
 export function ActionsPanel() {
@@ -203,6 +204,7 @@ function ActionEditor({
     const next: Action = {
       id: initial?.id ?? uid('act'),
       name: name.trim() || 'Action',
+      kind: initial?.kind ?? 'preset',
       providerId,
       contextScope,
       systemPrompt,

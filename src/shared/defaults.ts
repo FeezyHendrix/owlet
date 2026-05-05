@@ -6,7 +6,19 @@ export function uid(prefix = 'id'): string {
 
 export const BUILTIN_ACTIONS_TEMPLATE: Omit<Action, 'id' | 'providerId'>[] = [
   {
+    name: 'Ask…',
+    kind: 'ask',
+    contextScope: 'selection+paragraph',
+    systemPrompt:
+      "You answer the user's question about a passage they highlighted on a webpage. Be concise, factual, and ground your answer in the selection and surrounding context. If the answer is not in the provided text, say so.",
+    userPromptTemplate:
+      'Page: {{title}} ({{url}})\n\nSurrounding context:\n{{paragraph}}\n\nHighlighted selection:\n"""\n{{selection}}\n"""\n\nQuestion:\n{{question}}',
+    maxTokens: 800,
+    temperature: 0.3,
+  },
+  {
     name: 'Explain',
+    kind: 'preset',
     contextScope: 'selection+paragraph',
     systemPrompt:
       'You are a concise explainer. Use plain language. Prefer short paragraphs and bullet lists when helpful. Never invent facts.',
@@ -17,6 +29,7 @@ export const BUILTIN_ACTIONS_TEMPLATE: Omit<Action, 'id' | 'providerId'>[] = [
   },
   {
     name: 'Summarize',
+    kind: 'preset',
     contextScope: 'full-page',
     systemPrompt:
       'You produce tight, factual summaries. Output 3-5 bullet points unless the user asks for more.',
@@ -27,6 +40,7 @@ export const BUILTIN_ACTIONS_TEMPLATE: Omit<Action, 'id' | 'providerId'>[] = [
   },
   {
     name: 'Translate to English',
+    kind: 'preset',
     contextScope: 'selection',
     systemPrompt:
       'You are a precise translator. Detect the source language. Translate to natural English. Preserve names and numbers. Output translation only, no commentary.',
@@ -36,6 +50,7 @@ export const BUILTIN_ACTIONS_TEMPLATE: Omit<Action, 'id' | 'providerId'>[] = [
   },
   {
     name: 'Define',
+    kind: 'preset',
     contextScope: 'selection+paragraph',
     systemPrompt:
       'You are a dictionary. Give part of speech, a one-sentence definition, and one usage example. Use the surrounding paragraph to choose the correct sense.',

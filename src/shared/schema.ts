@@ -16,10 +16,14 @@ export type Provider = z.infer<typeof ProviderSchema>
 export const ContextScopeSchema = z.enum(['selection', 'selection+paragraph', 'full-page'])
 export type ContextScope = z.infer<typeof ContextScopeSchema>
 
+export const ActionKindSchema = z.enum(['preset', 'ask']).default('preset')
+export type ActionKind = z.infer<typeof ActionKindSchema>
+
 export const ActionSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1).max(40),
   icon: z.string().max(40).optional(),
+  kind: ActionKindSchema,
   systemPrompt: z.string().max(4000),
   userPromptTemplate: z.string().min(1).max(4000),
   contextScope: ContextScopeSchema,

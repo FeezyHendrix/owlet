@@ -1,4 +1,11 @@
-export const TEMPLATE_VARS = ['selection', 'paragraph', 'pageText', 'title', 'url'] as const
+export const TEMPLATE_VARS = [
+  'selection',
+  'paragraph',
+  'pageText',
+  'title',
+  'url',
+  'question',
+] as const
 export type TemplateVar = (typeof TEMPLATE_VARS)[number]
 
 export type TemplateVars = Partial<Record<TemplateVar, string>>

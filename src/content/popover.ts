@@ -15,6 +15,7 @@ export type PopoverHandle = {
   setOnOpenSidePanel: (cb: (() => void) | null) => void
   setStreaming: (streaming: boolean) => void
   showFollowUpInput: () => void
+  setFollowUpPlaceholder: (text: string) => void
 }
 
 export function showPopover(parent: HTMLElement, selection: CapturedSelection): PopoverHandle {
@@ -284,6 +285,9 @@ export function showPopover(parent: HTMLElement, selection: CapturedSelection): 
       if (!onFollowUpCb) return
       followUp.style.display = 'flex'
       if (!isStreaming) followUpInput.focus()
+    },
+    setFollowUpPlaceholder: (text) => {
+      followUpInput.placeholder = text
     },
   }
 }

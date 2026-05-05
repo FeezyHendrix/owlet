@@ -25,12 +25,14 @@ export async function runAction(
   action: Action,
   provider: Provider,
   callbacks: RunCallbacks,
+  options?: { question?: string },
 ): Promise<RunHandle> {
   let aborted = false
   let port: chrome.runtime.Port | null = null
 
   try {
     const vars = await buildVars(selection, action.contextScope)
+    if (options?.question !== undefined) vars.question = options.question
     const userPrompt = renderTemplate(action.userPromptTemplate, vars)
     const trimResult = trimToCharBudget(userPrompt, MAX_PROMPT_CHARS)
 
